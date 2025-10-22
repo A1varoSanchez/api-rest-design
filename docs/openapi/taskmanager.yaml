@@ -24,13 +24,13 @@ paths:
       description: Devuelve una lista de tareas registradas
       responses:
         "200":
-          description: Lista de tareas obtenida correctamente
+          description: Lista de tareas
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/inline_response_200"
+                  $ref: "#/components/schemas/Task"
     post:
       tags:
       - Tasks
@@ -45,20 +45,61 @@ paths:
       responses:
         "201":
           description: Tarea creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
 components:
   schemas:
-    inline_response_200:
+    Task:
+      required:
+      - status
+      - title
       type: object
       properties:
         id:
           type: string
-          example: "1"
+          example: 64ab32cd9f0c1e12a45b78d9
         title:
           type: string
-          example: Aprender OpenAPI
+          example: Preparar práctica de OpenAPI
+        description:
+          type: string
+          example: Definir modelos y esquemas en OpenAPI
         status:
           type: string
           example: todo
+          enum:
+          - todo
+          - in_progress
+          - done
+        priority:
+          type: string
+          example: medium
+          enum:
+          - low
+          - medium
+          - high
+        dueDate:
+          type: string
+          format: date-time
+          example: 2025-10-30T14:00:00Z
+        tags:
+          type: array
+          items:
+            type: string
+            example: "[\"work\",\"urgent\"]"
+    Error:
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          type: string
+          example: Validation error
+        details:
+          type: string
+          example: The field 'title' is required
     tasks_body:
       required:
       - status
