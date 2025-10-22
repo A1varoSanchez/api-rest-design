@@ -12,10 +12,62 @@ info:
 servers:
 - url: http://localhost:3000/v1
   description: Servidor local de desarrollo
-- url: https://staging.api.taskmanager.dev/v1
-  description: Servidor de staging
 tags:
 - name: Tasks
   description: Operaciones relacionadas con la gestión de tareas
-paths: {}
-components: {}
+paths:
+  /tasks:
+    get:
+      tags:
+      - Tasks
+      summary: Obtener todas las tareas
+      description: Devuelve una lista de tareas registradas
+      responses:
+        "200":
+          description: Lista de tareas obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/inline_response_200"
+    post:
+      tags:
+      - Tasks
+      summary: Crear una nueva tarea
+      description: Crea una nueva tarea a partir de los datos enviados
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/tasks_body"
+        required: true
+      responses:
+        "201":
+          description: Tarea creada correctamente
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        title:
+          type: string
+          example: Aprender OpenAPI
+        status:
+          type: string
+          example: todo
+    tasks_body:
+      required:
+      - status
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          example: Preparar curso de OpenAPI
+        status:
+          type: string
+          example: todo
