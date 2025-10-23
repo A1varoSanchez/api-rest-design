@@ -1,0 +1,24 @@
+{
+  "name": "api-rest-design",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Título del curso: Diseño de APIs REST con Enfoque API First y OpenAPI 3 usando Node.js + Express",
+  "main": "src/server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
