@@ -1,4 +1,5 @@
 openapi: 3.0.3
+security: []
 info:
   title: Task Manager API
   description: API para la gestión de tareas del curso Diseño de APIs REST
@@ -10,14 +11,15 @@ info:
     url: https://opensource.org/licenses/MIT
   version: 1.0.0
 servers:
-- url: http://localhost:3000/v1
-  description: Servidor local de desarrollo
+- url: https://staging.api.taskmanager.dev/v1
+  description: Servidor de staging
 tags:
 - name: Tasks
   description: Operaciones relacionadas con la gestión de tareas
 paths:
   /tasks:
     get:
+      operationId: getTasks
       tags:
       - Tasks
       summary: Obtener todas las tareas
@@ -31,7 +33,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Task"
+        "400":
+          description: Error de solicitud
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     post:
+      operationId: createTask
       tags:
       - Tasks
       summary: Crear una nueva tarea
@@ -49,6 +58,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Task"
+        "400":
+          description: Error de solicitud
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     Task:
