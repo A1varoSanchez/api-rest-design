@@ -3,7 +3,6 @@ security: []
 info:
   title: Task Manager API – Curso API First
   description: API de referencia para el curso (definición OpenAPI + implementación Express).
-  version: 1.0.0
   contact:
     name: Equipo del curso
     email: soporte@taskmanager.dev
