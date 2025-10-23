@@ -24,15 +24,29 @@ paths:
       - Tasks
       summary: Obtener todas las tareas
       description: Devuelve una lista de tareas registradas
+      # responses:
+      #   "200":
+      #     description: Lista de tareas
+      #     content:
+      #       application/json:
+      #         schema:
+      #           type: array
+      #           items:
+      #             $ref: "#/components/schemas/Task"
       responses:
-        "200":
+        '200':
           description: Lista de tareas
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Task"
+              examples:
+                ejemplo:
+                  value:
+                  - id: "1"
+                    title: "Mock desde OpenAPI"
+                    status: "todo"
+                  - id: "2"
+                    title: "nueva tarea Mock"
+                    status: "in_progress"
         "400":
           description: Error de solicitud
           content:
