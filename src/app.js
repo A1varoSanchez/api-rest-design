@@ -5,10 +5,12 @@ import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
 import { fileURLToPath } from "url";
+import taskRoutes from "./routes/taskRoutes.js";
 
 const app = express();
 app.use(express.json());
 app.use(logger);
+app.use("/tasks", taskRoutes);
 
 // __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -22,7 +24,7 @@ const openapiDocument = YAML.load(openapiPath);
 
 app.use("/explorer", swaggerUi.serve, swaggerUi.setup(openapiDocument));
 
-app.get("/taskmanager-api.json", (req, res) => {
+app.get("/taskmanager-api.json", function(req, res) {
   res.type("application/json").send(JSON.stringify(openapiDocument, null, 2));
 });
 
