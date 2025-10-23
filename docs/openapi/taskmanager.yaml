@@ -24,6 +24,39 @@ paths:
       - Tasks
       summary: Obtener todas las tareas
       description: Devuelve una lista de tareas registradas
+      parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Página de resultados
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Número de resultados por página
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum: [todo, in_progress, done]
+        description: Filtrar por estado
+      - in: query
+        name: priority
+        schema:
+          type: string
+          enum: [low, medium, high]
+        description: Filtrar por prioridad
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Buscar texto en el título de la tarea
       # responses:
       #   "200":
       #     description: Lista de tareas
@@ -33,26 +66,49 @@ paths:
       #           type: array
       #           items:
       #             $ref: "#/components/schemas/Task"
+      # responses:
+      #   '200':
+      #     description: Lista de tareas
+      #     content:
+      #       application/json:
+      #         examples:
+      #           ejemplo:
+      #             value:
+      #             - id: "1"
+      #               title: "Mock desde OpenAPI"
+      #               status: "todo"
+      #             - id: "2"
+      #               title: "nueva tarea Mock"
+      #               status: "in_progress"
       responses:
         '200':
-          description: Lista de tareas
-          content:
-            application/json:
-              examples:
-                ejemplo:
-                  value:
-                  - id: "1"
-                    title: "Mock desde OpenAPI"
-                    status: "todo"
-                  - id: "2"
-                    title: "nueva tarea Mock"
-                    status: "in_progress"
-        "400":
-          description: Error de solicitud
+          description: Lista paginada de tareas
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                type: object
+                required: [items, page, limit, totalItems]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 10
+                  totalItems:
+                    type: integer
+                    example: 42
+                  totalPages:
+                    type: integer
+                    example: 5
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
     post:
       operationId: createTask
       tags:
@@ -72,12 +128,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Task"
-        "400":
-          description: Error de solicitud
+        '400':
+          description: Validation error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ProblemDetails"
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
     Task:
@@ -141,3 +199,28 @@ components:
         status:
           type: string
           example: todo
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "https://api.ejemplo.com/errors/validation"
+        title:
+          type: string
+          example: "Validation error"
+        status:
+          type: integer
+          example: 400
+        detail:
+          type: string
+          example: "Missing field 'title'"
+        instance:
+          type: string
+          example: "/tasks"
+  responses:
+    ErrorResponse:
+      description: Error genérico
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
