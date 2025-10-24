@@ -1,4 +1,11 @@
-import { getAllTasks, createTask } from "../services/taskService.js";
+import {
+  getAllTasks,
+  createTask,
+  getTaskById,
+  updateTask,
+  patchTask,
+  deleteTask
+} from "../services/taskService.js";
 
 export async function getTasks(req, res, next) {
   try {
@@ -16,7 +23,8 @@ export async function addTask(req, res, next) {
 
     // Validación mínima a nivel controlador (lo fuerte lo hace Mongoose)
     if (!title || !status) {
-      return res.status(400).json({ error: "title and status are required" });
+      //return res.status(400).json({ error: "title and status are required" });
+      throw(400, "title and status are required")
     }
 
     const newTask = await createTask({ title, status, priority, description, dueDate });
@@ -25,3 +33,34 @@ export async function addTask(req, res, next) {
     next(err);
   }
 }
+
+export async function getTask (req, res, next) {
+  try {
+    const task = await getTaskById(req.params.id);
+    res.json(task);
+  } catch (err) { next(err); }
+};
+
+export async function replaceTask (req, res, next) {
+  try {
+    if (!req.body.title || !req.body.status) {
+      return res.status(400).json({ error: "title and status are required for PUT" });
+    }
+    const updated = await updateTask(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) { next(err); }
+};
+
+export async function partialUpdateTask (req, res, next) {
+  try {
+    const updated = await patchTask(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) { next(err); }
+};
+
+export async function removeTask (req, res, next) {
+  try {
+    await deleteTask(req.params.id);
+    res.status(204).send();
+  } catch (err) { next(err); }
+};
